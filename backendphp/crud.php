@@ -11,6 +11,7 @@ include 'config.php';
 
 
 $user = file_get_contents('php://input'); // to read the data from react(witch is in Json)
+
 // we can see it in inspect -- Network -- Payload and Preview
 
 $method = $_SERVER['REQUEST_METHOD']; // there is a case of GEt when we want to bring data , and case of POSt when we want to send data
@@ -22,7 +23,7 @@ switch($method){
         // echo $_SERVER['REQUEST_URI']; exit;
         
 
-        $sql="SELECT * FROM user";
+        $sql="SELECT * FROM users";
         $path = explode('/', $_SERVER['REQUEST_URI']); // explode exepting 2 parameters first how do you want to explode the string , then  the path
         // print_r($path);  // to show you array of the data
         if(isset($path[4]) && !is_numeric($path[4])){
@@ -37,6 +38,7 @@ switch($method){
             $db =$con->prepare($sql);
             $db->execute();
             $data= $db->fetchAll(PDO::FETCH_ASSOC);
+        
         }
 
     echo json_encode($data);
@@ -46,7 +48,7 @@ switch($method){
     case "POST":
         $user = json_decode(file_get_contents('php://input')); // to make php read this as an object from react
         
-        $db = crud::connect()->prepare("INSERT INTO user ( id ,name, email, password , gender ,Created_at) VALUES (:id ,:name,:email,:password, :gender ,:created)");
+        $db = crud::connect()->prepare("INSERT INTO users ( id ,name, email, password , gender ,Created_at) VALUES (:id ,:name,:email,:password, :gender ,:created)");
         $created_at = date('Y-m-d');
         $db->bindValue(':id' , $user->id); // to reach the name email and mobile from data 
         $db->bindValue(':name' , $user->name); // to reach the name email and mobile from data 
